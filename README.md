@@ -7,6 +7,8 @@
 - André Santos (up202207724)
 - Júlio Santos (up202207975)
 
+## Project Grade: 16.8
+
 ## Comands to initialize the Docker Image
 
 ```
