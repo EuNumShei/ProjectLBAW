@@ -1,0 +1,97 @@
+.account-container {
+    background: #fff;
+    padding: 2rem;
+    margin-top: 0rem;
+    position: relative;
+}
+
+.account-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+}
+
+.back-button {
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin-right: 1rem;
+}
+
+.back-button:hover {
+    color: #007bff;
+}
+
+.account-info {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.account-pic {
+    margin-right: 2rem;
+}
+
+.account-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    transition: transform 0.3s ease;
+}
+
+.account-pic img:hover {
+    transform: scale(1.05);
+}
+
+.account-details {
+    flex: 1;
+}
+
+.account-details h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.account-stats {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.account-stats .full-name,
+.account-stats .email {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.account-bio {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.account-action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.edit-account-button {
+    color: #fff;
+    background-color: #ffd700;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-account-button:hover {
+    background-color: #ffd900;
+}

@@ -1,0 +1,64 @@
+.user-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #fff;
+}
+
+.user-card-header {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 16px;
+}
+
+.user-info {
+    flex-grow: 1;
+}
+
+.user-name {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.user-username {
+    margin: 0;
+    color: #555;
+}
+
+.user-bio {
+    margin-top: 8px;
+    color: #777;
+}
+
+.add-friend-btn {
+    background-color: black;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-friend-btn:hover {
+    background-color: #0056b3;
+}
+
+.profile-link {
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.profile-link:hover {
+    color: black;
+    text-decoration: underline;
+}

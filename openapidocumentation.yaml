@@ -1,0 +1,1732 @@
+openapi: 3.0.0
+info:
+  title: 'GlintHub OpenAPI'
+  version: 1.0.0
+  description: 'Web Resources Specification for GlintHub'
+
+servers:
+- url: db.feup.up.pt
+  description: Production server
+
+tags:
+  - name: 'M01: Authentication and Individual Profile'
+  - name: 'M02: Social Interactions'
+  - name: 'M03: Content Management'
+  - name: 'M04: Notifications'
+  - name: 'M05: Search and Discovery'
+  - name: 'M06: Privacy and Security'
+  - name: 'M07: Admin and Moderation Tools'
+  - name: 'M08: Groups'
+  
+paths:
+  /:
+    get:
+      operationId: R101
+      summary: 'R101 : Home Redirection'
+      description: 'Redirects the guest to the home page. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '302':
+          description: 'Redirect to /home'
+          headers:
+            /home:
+              schema:
+                type: string
+
+
+  /login:
+    get:
+      operationId: R102
+      summary: 'R102 : Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+        '302':
+          description: 'Redirect after verifying user credentials'
+          headers:
+            /home:
+              description: 'You are already logged in!'
+              schema:
+                type: string
+
+    post:
+      operationId: R103
+      summary: 'R103 : Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urllencoded:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                  - email
+                  - password
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            /home:
+              description: 'You have logged in successfully!'
+              schema:
+                type: string
+            /login:
+              description: 'The provided credentials do not match our records.'
+              schema:
+                type: string
+
+  /logout:
+    get:
+      operationId: R104
+      summary: 'R104: View Logout'
+      description: 'Provide logout redirection. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '302':
+          description: 'Redirect after verifying logout'
+          headers:
+            /login:
+              description: 'You have logged out successfully!'
+              schema:
+                type: string
+    post:
+      operationId: R105
+      summary: 'R105 : Logout Action'
+      description: 'Logout the current authenticated used. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            /login:
+              description: 'You have logged out successfully!'
+              schema:
+                type: string
+
+  /register:
+    get:
+      operationId: R106
+      summary: 'R106 : Register Form'
+      description: 'Provide new user registration form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show sign-up UI.'
+
+    post:
+      operationId: R107
+      summary: 'R107 : Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            /home:
+              description: 'You have successfully registered & logged in!'
+              schema:
+                type: string
+  
+  /profile/{id}:
+    get:
+      operationId: R108
+      summary: 'R108 : Profile Page'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      description: 'Show the individual user profile. Access: PUB'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+    
+    put:
+      operationId: R109
+      summary: 'R109 : Edit Profile'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      description: 'Edit the individual user profile. Access: OWN, ADM'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                  maxLength: 100
+                profile_pic:
+                  type: object
+                  format: jpeg,png,jpg,gif,svg
+                  nullable: true
+                  maxLength: 5048
+                bio:
+                  type: string
+                  nullable: true
+                admin:
+                  type: boolean
+                  nullable: true
+              required:
+                - full_name
+      responses:
+        '302':
+          description: 'Redirect after updating the new user profile.'
+          headers:
+            /profile/{id}:
+              description: 'Profile updated successfully.'
+              schema:
+                type: string
+      
+    delete:
+      operationId: R110
+      summary: 'R110 : Delete Profile'
+      description: 'Remove the specified profile. Access: OWN, ADM'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'Profile deleted'
+
+      
+  
+  /profile/{id}/edit:
+      get:
+        operationId: R111
+        summary: 'R111 : Profile Edit Page'
+        description: 'View the profile edit page. Access: OWN, ADM'
+        tags:
+          - 'M01: Authentication and Individual Profile'
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description:  'Ok. Show edit profile UI'
+          '302':
+            description: 'Redirect after trying to edit unauthorized profiles.'
+            headers:
+              /home:
+                description: 'You are not authorized to edit this post.'
+                schema: 
+                  type: string
+
+  /post:
+    post:
+      operationId: R301
+      summary: 'R301 : Create Post'
+      description: 'Create a new post . Access: USR, ADM'
+      tags:
+        - 'M03: Content Management'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  maxLength: 255
+                image_url:
+                  type: object
+                  format: jpeg,png,jpg,gif,svg
+                  nullable: true
+                  maxLength: 5048
+                group_id:
+                  nullable: true
+                  description: "The ID of the group. Must exist in the 'group' table."
+              required:
+                - content
+      responses:
+        '302':
+          description: 'Redirect for various successful and unsuccessful ocaasions'
+          headers:
+            302Success:
+              description: 'Post created successfully! Redirected to previous page'
+              schema:
+                type: string
+            /login:
+              description: 'You must be logged in to create a post.'
+              schema:
+                type: string
+            /home:
+              description: 'You are not authorized to create a post.'
+              schema:
+                type: string
+
+  /post/{id}:
+    get:
+      operationId: R302
+      summary: 'R302 : View Post'
+      description: 'View a post . Access: PUB'
+      tags:
+        - 'M03: Content Management'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show post UI.'
+    put:
+      operationId: R303
+      summary: 'R303 : Update Post'
+      description: 'Update a post . Access: OWN, ADM'
+      tags:
+        - 'M03: Content Management'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  maxLength: 255
+                image:
+                  type: object
+                  format: jpeg,png,jpg,gif,svg
+                  nullable: true
+                  maxLength: 2048
+              required:
+                - content
+      responses:
+        '302':
+          description: 'Redirect for various successful and unsuccessful updates'
+          headers:
+            /post/{id}:
+              description: 'Post updated successfully!'
+              schema:
+                type: string
+            /home:
+              description: 'You are not authorized to edit this post.'
+              schema:
+                type: string
+    delete:
+      operationId: R304
+      summary: 'R304 : Delete Post'
+      description: 'Remove the specified post. Access: OWN, ADM'
+      tags:
+        - 'M03: Content Management'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: 'Redirect for various successful and unsuccessful deletions'
+          headers:
+            302Success:
+              description: 'Post deleted successfully!'
+              schema:
+                type: string
+              example: '/home'
+            302Failure:
+              description: 'You are not authorized to delete this post.'
+              schema:
+                type: string
+              example: '/home'
+
+  /post/{id}/edit:
+    get:
+      operationId: R305
+      summary: 'R305 : View Edit Post Page'
+      description: 'View edit a post page. Access: OWN, ADM'
+      tags:
+        - 'M03: Content Management'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show edit post UI.'
+        '302':
+          description: 'Redirect for unauthorized post edition'
+          headers:
+            /home:
+              description: 'You are not authorized to edit this post.'
+              schema:
+                type: string
+
+  /notifications:
+    get:
+      operationId: R401
+      summary: 'R401 : View Notifications'
+      description: 'View user notifications. Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+      responses:
+        '200':
+          description: 'Ok. Show notifications UI.'
+    delete:
+      operationId: R402
+      summary: 'R402: Remove Notifications'
+      description: 'Remove notifications. Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+      responses:
+        '204':
+          description: 'Notification deleted successfully.'
+        '403':
+          description: 'You are not authorized to this action.'
+    
+
+  /groups:
+    get:
+      operationId: R801
+      summary: 'R801 : View List of Groups'
+      description: 'View list of groups. Access: USR, ADM'
+      tags:
+        - 'M08: Groups'
+      responses:
+        '200':
+          description: 'Ok. Show group list UI.'
+    post:
+      operationId: R802
+      summary: 'R802 : Create Group'
+      description: 'Create a group. Access: USR, ADM'
+      tags:
+        - 'M08: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                  nullable: true
+                author_id:
+                  type: integer
+              required:
+                - name
+                - author_id
+      responses:
+        '302':
+          description: 'Redirect for successful group creation'
+          headers:
+            /groups/{id}:
+                description: 'Group created successfully!'
+                schema:
+                  type: string
+                
+  /groups/create:
+    get:
+      operationId: R803
+      summary: 'R803 : View Create Group Page'
+      description: 'View create a group page. Access: USR, ADM'
+      tags:
+        - 'M08: Groups'
+      responses:
+        '200':
+          description: 'Ok. Show create group UI.'
+
+  /groups/{id}:
+    get:
+      operationId: R804
+      summary: 'R804 : View Group'
+      description: 'View a group. Access: USR, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show group UI.'
+    put:
+      operationId: R805
+      summary: 'R805 : Edit Group'
+      description: 'Edit information of a group. Access: OWN, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                description:
+                  type: string
+                  nullable: true
+                author_id:
+                  type: integer
+              required:
+                - name
+                - author_id
+      responses:
+        '302':
+          description: 'Redirect for successful group edition'
+          headers:
+            /groups/{id}:
+                description: 'Group edited successfully!'
+                schema:
+                  type: string
+    delete:
+      operationId: R806
+      summary: 'R806 : Delete Group'
+      description: 'Remove the specified group. Access: OWN, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'Group deleted'
+          
+  /groups/{id}/edit:
+    get:
+      operationId: R807
+      summary: 'R807 : View Edit Group Page'
+      description: 'View edit group page. Access: OWN, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show group edit UI.'
+      
+  /groupinvitenotification:
+    post:
+      operationId: R201, R403, R808
+      summary: 'R201, R403, R808 : Create Group Invite Notification'
+      description: 'Create a group invite notification. Access: OWN, GRP_USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M08: Groups'
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                receiver_id:
+                  type: integer
+                  description: "The ID of the receiving user. Must exist in the 'profile' table."
+                sender_id:
+                  type: integer
+                  description: "The ID of the sending user. Must exist in the 'profile' table."
+                created_at:
+                  type: object
+                  format: date-time
+                group_id:
+                  type: integer
+                  description: "The ID of the group. Must exist in the 'group' table."
+                request_status:
+                  type: string
+                notification_type:
+                  type: string
+                  description: 'group_invite'
+              required:
+                - receiver_id
+                - sender_id
+                - created_at
+                - group_id
+                - request_status
+                - notification_type
+      responses:
+        '201':
+          description: 'Group invite notification created'
+        '403':
+          description: 'You are not authorized to this action.'       
+
+  /groupinvitenotifications/{notificationId}:
+    put:
+      operationId: R202, R404, R809
+      summary: 'R202, R404, R809 : Update Group Invite Notification'
+      description: 'Update a group invite notification. Access: OWN, GRP_USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M08: Groups'
+        - 'M02: Social Interactions'
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request_status:
+                  type: string
+              required:
+                - request_status
+      responses:
+        '200':
+          description: 'Group invite notification updated'
+        '403':
+          description: 'You are not authorized to this action.'
+        '500':
+          description: 'Error updating notification'
+    
+  /home:
+    get:
+      operationId: R501
+      summary: 'R501 : View Home Page'
+      description: 'View Home Page. Access: PUB'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show home UI.'
+  
+  /for-you:
+    get:
+      operationId: R502
+      summary: 'R502 : View For You Page'
+      description: 'View For You Page. Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show for-you page UI'
+        '302':
+          description: 'Redirect for unauthorized access'
+          headers:
+            /login:
+              description: 'You are not authorized to view this page.'
+              schema:
+                type: string
+
+  /public-posts:
+    get:
+      operationId: R503
+      summary: 'R503 : View Public Posts'
+      description: 'View Public Posts. Access: PUB'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show public posts UI'
+
+  /search:
+    get:
+      operationId: R504
+      summary: 'R504 : View Search'
+      description: 'View Public Posts. Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: The search query string
+        - in: query
+          name: group
+          schema:
+            type: string
+            enum: [users, groups, posts, comments]
+          required: false
+          description: The group to search within (default is 'users')
+      responses:
+        '200':
+          description: 'Ok. Returns the search results in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the result
+                        type:
+                          type: string
+                          description: Type of the result (e.g., user, group, post, comment)
+                        title:
+                          type: string
+                          description: The title or name of the result
+                        url:
+                          type: string
+                          description: URL to the resource
+                  total:
+                    type: integer
+                    description: Total number of results
+                example:
+                  results:
+                    - id: "12345"
+                      type: "user"
+                      title: "John Doe"
+                      url: "/users/12345"
+                    - id: "67890"
+                      type: "post"
+                      title: "How to use the API"
+                      url: "/posts/67890"
+                  total: 2
+
+
+  /friendrequestnotifications:
+    get:
+      operationId: R203, R405
+      summary: 'R203, R405 : View Friend Request Notifications'
+      description: 'View Friend Request Notifications. Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M02: Social Interactions'
+      responses:
+        '200':
+          description: 'Ok. Show friend request notifications UI.'
+    post:
+      operationId: R204, R406
+      summary: 'R204, R406 : Create Friend Request Notifications'
+      description: 'Create Friend Request Notifications. Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                receiver_id:
+                  type: integer
+                  description: "The ID of the receiving user. Must exist in the 'profile' table."
+                sender_id:
+                  type: integer
+                  description: "The ID of the sending user. Must exist in the 'profile' table."
+                created_at:
+                  type: object
+                  format: date-time
+                request_status:
+                  type: string
+                notification_type:
+                  type: string
+                  description: 'friend_request'
+              required:
+                - receiver_id
+                - sender_id
+                - created_at
+                - request_status
+                - notification_type
+      responses:
+        '201':
+          description: 'Friend request notification created'
+    put:
+      operationId: R205, R407
+      summary: 'R205, R407 : Edit Friend Request Notifications'
+      description: 'Edit a friend request notification (accept only for now). Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request_status:
+                  type: string
+              required:
+                - request_status
+      responses:
+        '200':
+          description: 'Friend request notification updated'
+        '500':
+          description: 'Friend request notification edited unsuccessfully!'
+        '403':
+          description: 'You are not authorized to this action.'
+
+  /settings:
+    get:
+      operationId: R601
+      summary: 'R601 : View Settings'
+      description: 'View settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show settings UI.'
+          
+  /settings/account:
+    get:
+      operationId: R602
+      summary: 'R602 : View Account Settings'
+      description: 'View the account settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show account settings UI.'
+  
+  /settings/change_password:
+    get:
+      operationId: R603
+      summary: 'R603 : View Change Password Settings'
+      description: 'View the change password settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show change password settings UI.'
+  
+  /settings/delete_account:
+    get:
+      operationId: R604
+      summary: 'R604 : View Delete Account Settings'
+      description: 'View the delete account settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show delete account settings UI.'
+  
+  /settings/profile_settings:
+    get:
+      operationId: R605
+      summary: 'R605 : View Profile Settings'
+      description: 'View the profile settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show profile settings UI.'
+  
+  /settings/blocked_accounts:
+    get:
+      operationId: R606
+      summary: 'R606 : View Blocked Accounts Settings'
+      description: 'View the blocked accounts settings page. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show blocked accounts settings UI.'
+  
+  /settings/notifications:
+    get:
+      operationId: R408, R607
+      summary: 'R408, R607 : View Notifications Settings'
+      description: 'View the notifications settings page. Access: USR, ADM'
+      tags:
+        - 'M04: Notifications'
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show notifications settings UI.'
+
+  /admin/users:
+    get:
+      operationId: R701
+      summary: 'R701 : View User List'
+      description: 'Display a list of all users. Access: ADM'
+      tags:
+        - 'M07: Admin and Moderation Tools'
+      responses:
+        '200':
+          description: 'oK. Show users list UI.'
+
+    post:
+      operationId: R702
+      summary: 'R702 : Create User'
+      description: 'Create a new user. Access: ADM'
+      tags:
+        - 'M07: Admin and Moderation Tools'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                full_name:
+                  type: string
+                  maxLength: 100
+                admin:
+                  type: boolean
+              required:
+                - name
+                - email
+                - password
+                - full_name
+                - admin
+      responses:
+        '201':
+          description: 'User created successfully'
+          
+  /admin/users/create:
+    get:
+      operationId: R703
+      summary: 'R703 : Create User Form'
+      description: 'View the create a new user form. Access: ADM'
+      tags:
+        - 'M07: Admin and Moderation Tools'
+      responses:
+        '200':
+          description: 'Ok. Show user form UI.'
+
+  /admin/users/{id}/edit:
+    get:
+      operationId: R704
+      summary: 'R704 : Edit User Form'
+      description: 'View the edit a user form. Access: ADM'
+      tags:
+        - 'M07: Admin and Moderation Tools'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show edit user UI.'
+
+  /admin/users/{id}:
+    put:
+      operationId: R705
+      summary: 'R705 : Edit User'
+      description: 'Edit a user. Access: ADM'
+      tags:
+        - 'M07: Admin and Moderation Tools'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                email:
+                  type: string
+                  description: "A valid, unique email address."
+                full_name:
+                  type: string
+                  maxLength: 100
+                action:
+                  type: string
+                  enum: [promote, demote]
+              required:
+                - name
+                - email
+                - full_name
+                - action
+      responses:
+        '302':
+          description: 'Redirection after successful user edition'
+          headers:
+            302SuccessDemote:
+              description: 'Updated successfully! User demoted to user!'
+              schema:
+                type: string
+              example: '/admin/users'
+            302SuccessPromote:
+              description: 'Updated successfully! User promoted to admin!'
+              schema:
+                type: string
+              example: '/admin/users'
+            302Success:
+              description: 'User updated successfully!'
+              schema:
+                type: string
+              example: '/admin/users'
+              
+  /friends-list:
+    get:
+      operationId: R206
+      summary: 'R206 : View Friends List'
+      description: 'View List of Friends. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      responses:
+        '200':
+          description: 'Ok. Show Friends List UI'
+          
+  /userfriend/{friend_id}:
+    delete:
+      operationId: R207
+      summary: 'R207 : De-friend user'
+      description: 'De-friend a user. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      parameters:
+        - name: friend_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '401':
+          description: 'User not authenticated.'
+        '200':
+          description: 'Friend removed successfully.'
+        '404':
+          description: 'Friend not found.'
+          
+  /friendRequests:
+    get:
+      operationId: R208
+      summary: 'R208: View Friend Requests'
+      description: 'View Friend Requests. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      responses:
+        '200':
+          description: 'Ok. Show friend requests UI.'
+          
+  /blocked-list:
+    get:
+      operationId: R608
+      summary: 'R608: View Blocked Users'
+      description: 'View List of Blocked Users. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show Blocked Users List UI.'
+          
+  /userblocked:
+    post:
+      operationId: R609
+      summary: 'R609 : Block a User'
+      description: 'Block a user. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: "The ID of the blocking user. Must exist in the 'profile' table."
+                blocked_user_id:
+                  type: integer
+                  description: "The ID of the blocked user. Must exist in the 'profile' table."
+              required:
+                - user_id
+                - blocked_user_id
+      responses:
+        '302':
+          description: 'User blocked successfully. Redirected to the previous page.'
+          
+  /userblocked/{blocked_user_id}:
+    delete:
+      operationId: R610
+      summary: 'R610 : Unblock a User'
+      description: 'Unblock a user. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      parameters:
+        - name: blocked_user_id
+          in: path
+          required: true
+          description: 'Id of the Blocked User'
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: 'Redirection after successful/unsuccessful unblocking action'
+          headers:
+            '302Success':
+              description: 'User blocked successfully. Redirected to the previous page.'
+              schema:
+                type: string
+            '302Failed':
+              description: 'Error unblocking user. Redirected to the previous page.'
+              schema:
+                type: string
+                
+  /support:
+    get:
+      operationId: R505
+      summary: 'R505: View Support Page'
+      description: 'View Support Page: Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show Support UI'
+          
+  /features:
+    get:
+      operationId: R506
+      summary: 'R506: View List of Features'
+      description: 'View List of Features Page: Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show List of Features UI'
+          
+  /about_us:
+    get:
+      operationId: R507
+      summary: 'R507: View About Us Page'
+      description: 'View About Us Page: Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show About Us UI'
+          
+  /contact_us:
+    get:
+      operationId: R508
+      summary: 'R508: View Contact Us Page'
+      description: 'View Contact Us Page: Access: USR, ADM'
+      tags:
+        - 'M05: Search and Discovery'
+      responses:
+        '200':
+          description: 'Ok. Show Contact Us UI'
+          
+  /change-password:
+    put:
+      operationId: R611
+      summary: 'R611: Change Password'
+      description: 'Change Password. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                current_password:
+                  type: string
+                  format: password
+                new_password:
+                  type: string
+                  format: password
+                  minLength: 8
+              required:
+                - current_password
+                - new_password
+      responses:
+        '302':
+          description: 'Redirection after successful/unsuccessful unblocking action'
+          headers:
+            '302Failed':
+              description: 'Validator failed. Redirected to the previous page.'
+              schema:
+                type: string
+            '302Failed2':
+              description: 'Current password is incorrect. Redirected to the previous page.'
+              schema:
+                type: string
+            '302Success':
+              description: 'Password changed successfully. Redirected to the previous page.'
+              schema:
+                type: string
+                
+  /delete-account:
+    delete:
+      operationId: R112, R612
+      summary: 'R112, R612: Delete Account'
+      description: 'Delete Account. Access: USR, ADM'
+      tags:
+        - 'M06: Privacy and Security'
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '302':
+          description: 'Redirection after successful/unsuccessful unblocking action'
+          headers:
+            '302Failed':
+              description: 'Validator failed. Redirected to the previous page.'
+              schema:
+                type: string
+            '302Failed2':
+              description: 'Password is incorrect. Redirected to the previous page.'
+              schema:
+                type: string
+            /login:
+              description: 'Account deleted successfully.'
+              schema:
+                type: string
+                
+  /comment/{id}:
+    get:
+      operationId: R209, R306
+      summary: 'R209, R306: View Comment'
+      description: 'View a Comment: Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+        - 'M03: Content Management'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Id of the Comment'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show Comment UI'
+          
+  /comment:
+    post:
+      operationId: R210, R307
+      summary: 'R210, R307: Create Comment'
+      description: 'Create a new comment. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+        - 'M03: Content Management'     
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                author_id:
+                  type: integer
+                  description: 'Id of the comment author.'
+                post_id:
+                  description: 'Id of the Post which contains the comment. Must belong to the "post" table.'
+                  type: integer
+                content:
+                  type: string
+              required:
+                - author_id
+                - post_id
+                - content
+      responses:
+        '201':
+          description: 'Comment created successfully'
+        '403':
+          description: 'You are not authorized to perform this action.'
+          
+    put:
+      operationId: R211, R308
+      summary: 'R211, R308: Edit Comment'
+      description: 'Edit a comment. Access: OWN, ADM'
+      tags:
+        - 'M02: Social Interactions'
+        - 'M03: Content Management'     
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                author_id:
+                  type: integer
+                  description: 'Id of the comment author.'
+                post_id:
+                  description: 'Id of the Post which contains the comment. Must belong to the "post" table.'
+                  type: integer
+                content:
+                  type: string
+              required:
+                - author_id
+                - post_id
+                - content
+      responses:
+        '201':
+          description: 'Comment edited successfully'
+          
+    delete:
+      operationId: R212, R309
+      summary: 'R212, R309: Delete Comment'
+      description: 'Delete a comment. Access: OWN, ADM'
+      tags:
+        - 'M02: Social Interactions'
+        - 'M03: Content Management' 
+      responses:
+        '204':
+          description: 'Comment deleted'
+          
+  /groupUsers/{group_id}:
+    delete:
+      operationId: R810
+      summary: 'R810 : Leave Group'
+      description: 'Leave group. Access: GRP_USR, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          description: 'Id of the group'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Left group successful'
+        '500':
+          description: 'Unable to leave group'
+          
+  /userlike/toggle:
+    post:
+      operationId: R213
+      summary: 'R213: Like and Unlike a Post'
+      description: 'Leave a like in a post if it is not liked or unlike if the post is liked. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 'Id of the User. Must belong to the "profile" table'
+                post_id:
+                  description: 'Id of the Post. Must belong to the "post" table.'
+                  type: integer
+              required:
+                - user_id
+                - post_id
+      responses:
+        '201':
+          description: 'Left like or unliked successfully'
+        '403':
+          description: 'You are not authorized to perform this action.'
+          
+  /userlikecomments/toggle:
+    post:
+      operationId: R214
+      summary: 'R214: Like and Unlike a Comment'
+      description: 'Leave a like in a post if it is not liked or unlike if the post is liked. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 'Id of the User. Must belong to the "profile" table'
+                post_id:
+                  description: 'Id of the Post. Must belong to the "post" table.'
+                  type: integer
+              required:
+                - user_id
+                - post_id
+      responses:
+        '201':
+          description: 'Left like or unliked successfully'
+        '403':
+          description: 'You are not authorized to perform this action.'
+          
+  /userfriends/{id}:
+    get:
+      operationId: R215
+      summary: 'R215: Show a friend in friends list'
+      description: 'Show a friend in the friends list'
+      tags:   
+        - 'M02: Social Interactions'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Id of the group'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Show friend UI.'
+          
+  /shares:
+    post:
+      operationId: R216
+      summary: 'R216: Share a Post'
+      description: 'Share a Post. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  description: 'Id of the Post. Must belong to the "post" table.'
+                  type: integer
+              required:
+                - post_id
+      responses:
+        '201':
+          description: 'Share created'
+        '403':
+          description: 'You are not authorized to perform this action.'
+    delete:
+      operationId: R217
+      summary: 'R217 : Remove Share Post'
+      description: 'Remove Share on a Post. Access: USR, ADM'
+      tags:
+        - 'M02: Social Interactions'
+      responses:
+        '302':
+          description: 'De-shared post successfully. Return to previous page.'
+
+  /search/members:
+    get:
+      operationId: R509
+      summary: 'R509 : View Search Members in Group'
+      description: 'View Search Members in Group. Access: PUB'
+      tags:
+        - 'M05: Search and Discovery'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: The search query string
+        - in: query
+          name: members
+          schema:
+            type: string
+            enum: [group]
+          required: false
+          description: 'The group of members to search within (default searches all members if not specified).'
+      responses:
+        '200':
+          description: 'Ok. Returns the matching group members in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the member
+                        name:
+                          type: string
+                          description: Full name of the member
+                        role:
+                          type: string
+                example:
+                  members:
+                    - id: "56789"
+                      name: "Alice Johnson"
+                    - id: "98765"
+                      name: "Bob Smith"
+                  total: 2
+
+  /search/invites:
+    get:
+      operationId: R510
+      summary: 'R510 : View Search Invites to Group'
+      description: 'View Search Invites to Group. Access: PUB'
+      tags:
+        - 'M05: Search and Discovery'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: The search query string
+        - in: query
+          name: invites
+          schema:
+            type: string
+            enum: [group]
+          required: false
+          description: 'The list of group invites to search within (default searches all invites if not specified).'
+      responses:
+        '200':
+          description: 'Ok. Returns the matching group invites in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invites:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the invite
+                        group_name:
+                          type: string
+                          description: Name of the group the invite belongs to
+                        invited_by:
+                          type: string
+                          description: The name of the person who sent the invite
+                  total:
+                    type: integer
+                    description: Total number of matching invites
+                example:
+                  invites:
+                    - id: "123"
+                      group_name: "Photography Club"
+                      invited_by: "Alice Johnson"
+                    - id: "456"
+                      group_name: "Book Lovers"
+                      invited_by: "Bob Smith"
+                  total: 2
+            
+  /password/recover:
+    get:
+      operationId: R613
+      summary: 'R613 : Recover Password Form'
+      description: 'Provide recover password form. Access: PUB'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show Recover Password UI'
+    post:
+      operationId: R614
+      summary: 'R614: Recover Password'
+      description: 'Recover Password. Access: PUB'
+      tags:
+        - 'M06: Privacy and Security'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+      responses:
+        '302':
+          description: 'Redirection after successful/unsuccessful recovering action'
+          headers:
+            /login:
+              description: 'Password recovery email sent!'
+              schema:
+                type: string
+            '302Failed':
+              description: 'Email not found. Redirected to the previous page.'
+              schema:
+                type: string
+                
+  /password/reset:
+    get:
+      operationId: R615
+      summary: 'R615 : Reset Password Form'
+      description: 'Provide reset password form. Access: PUB'
+      tags:
+        - 'M06: Privacy and Security'
+      responses:
+        '200':
+          description: 'Ok. Show Reset Password UI'
+    post:
+      operationId: R616
+      summary: 'R616: Reset Password'
+      description: 'Reset Password. Access: PUB'
+      tags:
+        - 'M06: Privacy and Security'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                token:
+                  type: object
+              required:
+                - email
+                - password
+                - token
+      responses:
+        '302':
+          description: 'Redirection after successful/unsuccessful resetting action'
+          headers:
+            /login:
+              description: 'Password has been reset!'
+              schema:
+                type: string
+            '302Failed':
+              description: 'Error found. Redirected to the previous page.'
+              schema:
+                type: string
+                
+  /update-privacy:
+    put:
+      operationId: R113
+      summary: 'R113 : Update Privacy'
+      description: 'Update Privacy. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                is_public:
+                  type: boolean
+              required:
+                - is_public
+      responses:
+        '302':
+          description: 'Redirect after successfully updating privacy.'
+          headers:
+            /settings/profile_settings:
+              description: 'Privacy settings updated successfully.'
+              schema: 
+                type: string
+                
+  /groupUsers/{group_id}/{user_id}:
+    delete:
+      operationId: R811
+      summary: 'R811 : Remove User from Group'
+      description: 'Leave group. Access: OWN, ADM'
+      tags:
+        - 'M08: Groups'
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          description: 'Id of the group'
+          schema:
+            type: integer
+        - name: user_id
+          in: path
+          required: true
+          description: 'Id of the user'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Responses after successful/unsuccessful removal.'
+          headers:
+            '302Failed':
+              description: 'Group Owner not found.'
+              schema: 
+                type: string
+            '302Failed2':
+              description: 'User removed unsuccessfully.'
+              schema: 
+                type: string
+            '302Success':
+              description: 'User removed successfully.'
+              schema: 
+                type: string

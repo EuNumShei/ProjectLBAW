@@ -1,0 +1,128 @@
+.profile-container {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-header .back-button {
+    font-size: 1.5rem;
+    color: #333;
+    text-decoration: none;
+}
+
+.profile-header h2 {
+    font-size: 1.75rem;
+    color: #333;
+}
+
+.edit-profile {
+    margin-top: 20px;
+}
+
+.edit-profile .form-group {
+    margin-bottom: 15px;
+}
+
+.edit-profile .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.edit-profile .form-group input,
+.edit-profile .form-group textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #333;
+    resize: none;
+}
+
+.edit-profile .form-group input[type="file"] {
+    padding: 5px;
+}
+
+.edit-profile .form-group .current-profile-pic {
+    display: block;
+    margin-top: 10px;
+    max-width: 150px;
+    border-radius: 50%;
+}
+
+.edit-profile .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #FFD700;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.edit-profile .btn:hover {
+    background-color: #FFD800;
+}
+
+.edit-profile .media-btn {
+    background-color: #FFD700;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.edit-profile .media-btn:hover {
+    background-color: #FFD800;
+}
+
+.edit-profile .text-danger {
+    color: #ff0000;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.alert.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.alert.alert-danger ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#remove-profile-pic-btn {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+#remove-profile-pic-btn:hover {
+    background-color: #cc0000;
+}

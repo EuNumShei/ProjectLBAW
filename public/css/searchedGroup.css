@@ -1,0 +1,49 @@
+.group-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.group-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-name {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.group-link {
+    color: #000;
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+}
+
+.group-link:hover {
+    text-decoration: underline;
+}
+
+.group-description {
+    margin-top: 8px;
+    color: #555;
+}
+
+.join-group-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.join-group-btn:hover {
+    background-color: #0056b3;
+}

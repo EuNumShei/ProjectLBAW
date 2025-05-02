@@ -1,0 +1,132 @@
+
+.search-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #e1e1e1;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.back-button{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: black;
+    border: none;
+    border-radius: 0.45rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0.75rem 1rem;
+    margin-right: 1rem;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #ffc107;
+}
+
+.search-form {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 0.45rem 0 0 0.45rem;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-btn {
+    padding: 0.75rem 1rem;
+    background-color: #FFD700;
+    color: #fff;
+    border: none;
+    border-radius: 0 0.45rem 0.45rem 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #ffc107;
+}
+
+.search-options {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.search-option-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.search-option-btn.active {
+    color: #FFD700;
+    border-bottom: 2px solid #FFD700;
+}
+
+.search-results {
+    padding: 0 2rem 2rem;
+    max-width: 65.5rem;
+}
+
+.placeholder-result {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+}
+
+.placeholder-result:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.placeholder-result h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.placeholder-result p {
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.truncate-description-search{
+    display: inline-block;
+    max-width: 30ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+@media (max-width: 768px) {
+    .search-results {
+        padding: 0 1rem 1rem;
+    }
+    
+    .placeholder-result {
+        padding: 1rem;
+    }
+}

@@ -1,0 +1,247 @@
+
+.home-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #e1e1e1;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.feed-options {
+    display: flex;
+    position: fixed;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.feed-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.feed-btn:hover,
+.feed-btn.active {
+    color: #FFD700;
+    border-bottom: 2px solid #FFD700;
+}
+
+.posts-section {
+    padding: 0 2rem 2rem;
+}
+
+.posts-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #FFD700;
+}
+
+.post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.post-username-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-username-link:hover .post-username {
+    text-decoration: underline;
+}
+
+.post-item {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.post-link:hover .post-item {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.post-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+}
+
+.post-item:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    position: relative;
+}
+
+.post-user-pic {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    border: 2px solid #FFD700;
+}
+
+.post-username {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.post-content {
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    padding: 0 0.5rem;
+}
+
+.post-footer {
+    display: flex;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.post-image {
+    width: 100%;
+    max-width: 30rem;
+    height: 20rem; 
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+.like-btn,
+.comment-btn,
+.share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.like-btn:hover,
+.comment-btn:hover,
+.share-btn:hover {
+    color: #FFD700;
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+.like-btn span,
+.comment-btn span {
+    font-weight: 600;
+}
+
+
+.post-options-menu {
+    position: absolute;
+    display: inline-block;
+    right: 0;
+}
+
+.post-options-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.post-options-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.post-options-menu:hover .post-options-dropdown {
+    display: block;
+}
+
+.post-option {
+    color: #2d3748;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.post-option:hover {
+    background-color: #f8f9fa;
+}
+
+.post-option i {
+    color: #FFD700;
+}
+
+.post-option-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.post-option-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.post-option-btn i {
+    color: #FFD700;
+}
+
+@media (max-width: 768px) {
+    .posts-section {
+        padding: 0 1rem 1rem;
+    }
+    
+    .post-item {
+        padding: 1rem;
+    }
+    
+    .post-footer {
+        flex-wrap: wrap;
+    }
+}
+
+.spacer {
+    height: 50px; /* Adjust the height as needed */
+}
